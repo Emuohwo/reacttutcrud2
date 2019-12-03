@@ -9,6 +9,46 @@ const Wrapper = styled.div`
     padding: 0 40px 40px;
 `
 
+const Update = styled.div`
+    color:#ef9bof;
+    cursor: pointer;
+`
+const Delete = styled.div`
+    color:#ff0000;
+    cursor: pointer;
+`
+
+class UpdateUser extends Component {
+    updaterUser = event => {
+        event.preventDefault()
+
+        window.location.href = `/users/update/${this.props.id}`
+    }
+
+    render() {
+        return <Update onClick={this.updaterUser}>Edit</Update>
+    }
+}
+
+class DeleteUser extends Component {
+    deleteUser = e => {
+        e.preventDefault()
+
+        if (
+            window.confirm(
+                `User ${this.props.id} will be deleted permanently`,
+            )
+        ) {
+            api.deleteUserById(this.props.id)
+            window.location.reload()
+        }
+    }
+
+    render() {
+        return <Delete onClick={this.deleteUser}>Del</Delete>
+    }
+}
+
 class UsersLists extends Component {
     constructor(props) {
         super(props)
@@ -40,12 +80,12 @@ class UsersLists extends Component {
                 filterable: true,
             },
             {
-                Header: 'First',
+                Header: 'First Name',
                 accessor: 'first',
                 filterable: true,
             },
             {
-                Header: 'Last',
+                Header: 'Last Name',
                 accessor: 'last',
                 filterable: true,
             },
@@ -68,6 +108,33 @@ class UsersLists extends Component {
                 Header: 'Hobby',
                 accessor: 'hobby',
                 filterable: true,
+            }, 
+            // {
+            //     Header: 'Time',
+            //     accessor: 'time',
+            //     Cell: props => <span>{props.value.join(' / ')}</span>,
+            // },
+            {
+                Header: '',
+                accessor: '',
+                Cell: function(props) {
+                    return (
+                        <span>
+                            <DeleteUser id={props.original.id} />
+                        </span>
+                    )
+                },
+            },
+            {
+                Header: '',
+                accessor: '',
+                Cell: function(props) {
+                    return (
+                        <span>
+                            <UpdateUser id={props.original.id} />
+                        </span>
+                    )
+                },
             },
         ]
 
